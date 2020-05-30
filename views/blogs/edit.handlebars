@@ -1,0 +1,30 @@
+<h1>Edit Post</h1>
+<div class="row">
+  <form action="/blogs/posts/{{post.blog.id}}/post/{{post.id}}/edit?_method=PUT" method="post" class="col s12">
+    <input type="hidden" name="_method" value="PUT">
+    <div class="row">
+      <div class="input-field">
+        <input type="text" name="title" value="{{post.title}}">
+        <label for="title">Title: </label>
+      </div>
+      <div class="input-field">
+        <input type="text" name="published" value="{{post.published}}">
+        <label for="published">Published: </label>
+      </div>
+        <div class="input-field">
+        <input type="text" name="author" value="{{post.author.displayName}}">
+        <label for="author">Author: </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="input-field">
+        <h5>Content of Post: </h5>
+        <textarea class="post-content" name="content">{{post.content}}</textarea>
+      </div>
+    </div>
+
+    <input type="submit" value="Save" class="btn">
+  </form>
+</div>

@@ -1,0 +1,30 @@
+<h4>Last Check for Settings | {{setting.settingbody.title}}</h4>
+  <form id="longRun" action="/crawl/{{blogid}}/manageweb/{{siteid}}/setting/{{setting.id}}/start?_method=POST" method="post" class="col s12">
+    <input type="hidden" name="_method" value="POST">
+    <div class="row">
+      <div class="input-field">
+        <input type="text" name="categoryLink" value="{{setting.settingbody.categoryLink}}">
+        <label for="title">Category Scrape Link: </label>
+      </div>
+      <div class="input-field">
+        <input type="text" name="blogCategory" value="{{setting.settingbody.blogCategory}}">
+        <label for="title">Blog Category : </label>
+      </div>            
+      <div class="input-field">
+        <input type="text" name="maximumPosts" value="{{setting.settingbody.maximumPosts}}">
+        <label for="title">Maximum Posts to Scrape : </label>
+      </div>         
+      {{#each setBodyArray}}
+      <div class="input-field"><input type="text" name="{{this.[0]}}" value="{{this.[1]}}"><label for="title">{{this.[0]}}: </label></div>
+      {{/each}}
+      <div class="input-field">
+        <h5>Setting Code: <a href="#/" id="toggleBtn" class="waves-effect waves-light btn">Show/Hide</a></h5>
+        <textarea class="post-content hidden" name="settingCode">{{setting.settingbody.settingCode}}</textarea>
+      </div>
+      </div>
+    <input type="submit" value="Start Crawling" class="btn">
+  </form>
+
+<ul id="publishedList" class="collection with-header"></ul>
+
+  <script src="/socket.js"></script>

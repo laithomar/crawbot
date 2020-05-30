@@ -1,0 +1,22 @@
+<h1>Add Post</h1>
+<div class="row">
+  <form action="/blogs/posts/{{blogid}}/add" method="post" class="col s12">
+    <input type="hidden" name="_method" value="POST">
+    <div class="row">
+      <div class="input-field">
+        <input type="text" name="title" value="{{post.title}}">
+        <label for="title">Title: </label>
+      </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="input-field">
+        <h5>Content of Post: </h5>
+        <textarea class="post-content" name="content">{{post.content}}</textarea>
+      </div>
+    </div>
+
+    <input type="submit" value="Save" class="btn">
+  </form>
+</div>

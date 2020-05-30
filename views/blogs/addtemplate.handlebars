@@ -1,0 +1,55 @@
+<h1>Add Posts from Template</h1>
+<div class="input-add-process">
+<h2></h2>
+<div id="newfield" class="input-field">
+    <p>
+      <input type="text" name="newfield" placeholder="Type new field Value" value="" />
+      <a href="#" id="addScnt" class="waves-effect waves-light btn">Add Field</a>
+    </p>
+</div>
+</div>
+<h3>Template Will Look like This :</h3>
+<div class="row">
+  <form action="/blogs/posts/{{blogid}}/addtemplate" method="post" class="col s12">
+    <input type="hidden" name="_method" value="POST">
+    <div class="row">
+      <div id="inputfield" class="input-field">
+        <p><input type="text" name="templateName" placeholder="Insert Name for the Template" value="" /></p>
+        <p><input type="text" readonly="readonly"  name="title" placeholder="Title Field - You Can't Delete this Field" value="title" /></p>
+        <p><input type="text" readonly="readonly"  name="category" placeholder="Category Field - You Can't Delete this Field" value="category" /></p>
+
+      </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="input-field">
+        <h5>Content of Post Template: </h5>
+        <textarea class="post-content" name="content"></textarea>
+      </div>
+    </div>
+
+    <input type="submit" value="Save" class="btn">
+  </form>
+</div>
+
+<script>
+  $(function () {
+    var scntDiv = $('#inputfield');
+    var nameValue;
+    $('#newfield input').keyup(function() { 
+     nameValue = $(this).val() // get the current value of the input field.
+    }).keyup();
+
+    $('#addScnt').click(function () {
+      $('<p><input type="text" name="' + nameValue + '" value="'+nameValue+'" placeholder="'+nameValue+'" /><a href="#" id="remScnt" class="waves-effect red accent-4 btn">Remove</a></p>').appendTo(scntDiv);
+      return false;
+    });
+   
+    $('#inputfield').on('click','#remScnt',function (e) {
+        //alert("yess! You're clicked");
+        $(this).parents('p').remove();
+      return false;
+    });
+  });
+</script>

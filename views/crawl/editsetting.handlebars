@@ -1,0 +1,57 @@
+<h4>Edit Page for {{setting.settingbody.title}}</h4>
+<div id="newfield" class="input-field">
+      <input type="text" name="newfield" placeholder="Type new field Value" value="" />
+      <a href="#" id="addScnt" class="waves-effect waves-light btn">Add Field</a>
+</div>
+
+  <form action="/crawl/{{blogid}}/manageweb/{{siteid}}/setting/{{setting.id}}/edit?_method=PUT" method="post" class="col s12">
+    <input type="hidden" name="_method" value="PUT">
+    <div id="inputfield" class="row">
+      <div class="input-field">
+        <input type="text" name="title" value="{{setting.settingbody.title}}">
+        <label for="title">Setting Title: </label>
+      </div>
+      <div class="input-field">
+        <input type="text" name="categoryLink" value="{{setting.settingbody.categoryLink}}">
+        <label for="title">Category Scrape Link: </label>
+      </div>
+      <div class="input-field">
+        <input type="text" name="blogCategory" value="{{setting.settingbody.blogCategory}}">
+        <label for="title">Blog Category : </label>
+      </div>            
+      <div class="input-field">
+        <input type="text" name="maximumPosts" value="{{setting.settingbody.maximumPosts}}">
+        <label for="title">Maximum Posts to Scrape : </label>
+      </div>         
+      {{#each setBodyArray}}
+      <div class="input-field"><input type="text" name="{{this.[0]}}" value="{{this.[1]}}"><label for="title">{{this.[0]}}: </label><a href="#" id="remScnt" class="waves-effect red accent-4 btn">Remove</a></div>
+      {{/each}}
+      </div>
+      <div class="input-field">
+        <h5>Setting Code: </h5>
+        <textarea class="post-content" name="settingCode">{{setting.settingbody.settingCode}}</textarea>
+      </div>
+    <input type="submit" value="Update" class="btn">
+  </form>
+
+
+<script>
+  $(function () {
+    var scntDiv = $('#inputfield');
+    var nameValue;
+    $('#newfield input').keyup(function() { 
+     nameValue = $(this).val() // get the current value of the input field.
+    }).keyup();
+
+    $('#addScnt').click(function () {
+      $('<div class="input-field"><input type="text" name="' + nameValue + '" value=""><label for="title">' + nameValue + '</label><a href="#" id="remScnt" class="waves-effect red accent-4 btn">Remove</a></div>').appendTo(scntDiv);
+      return false;
+    });
+   
+    $('#inputfield').on('click','#remScnt',function (e) {
+        //alert("yess! You're clicked");
+        $(this).parent('div').remove();
+      return false;
+    });
+  });
+</script>

@@ -1,0 +1,23 @@
+<h1>View Posts Templates</h1>
+<div class="row">
+<a href="/blogs/posts/{{blogid}}/addtemplate" class="waves-effect waves-light btn">Add Template</a>  
+<ul class="collection with-header">
+{{#each templates}}
+<li class="collection-item">
+        <div>
+          {{tempbody.templateName}}
+          <a href="/blogs/posts/{{blog.blogID}}/{{id}}/addpost" class="secondary-content">
+          <i class="material-icons">send</i></a>
+          <a href="/blogs/posts/{{blog.blogID}}/{{id}}/edittemplate" class="secondary-content">
+          <i class="material-icons">edit</i></a>
+          <form action="/blogs/posts/{{blog.blogID}}/{{id}}?_method=DELETE" method="post" id="delete-form">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" onclick="return confirm('Confirm Permanent Deletion of this Template?')" class="secondary-content"><i class="material-icons">delete</i></button>
+          </form>          
+          </div>
+          </li>
+{{else}}
+<p>No Templates found for this Blog</p>
+{{/each}}
+</ul>
+</div>

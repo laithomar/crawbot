@@ -1,0 +1,19 @@
+<h1>Add Website To Crawl</h1>
+<div class="row">
+  <form action="/crawl/{{blogid}}/addweb" method="post" class="col s12">
+    <input type="hidden" name="_method" value="POST">
+    <div class="row">
+      <div class="input-field">
+        <input type="text" name="sitename" value="{{sitename}}">
+        <label for="title">Sitename: </label>
+      </div>
+      <div class="input-field">
+        <input type="text" name="siteurl" value="{{siteurl}}">
+        <label for="title">Site URL: </label>
+      </div>
+      </div>
+    </div>
+
+    <input type="submit" value="Save" class="btn">
+  </form>
+</div>

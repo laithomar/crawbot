@@ -1,0 +1,31 @@
+<h1 blog="{{blogid}}" site="{{siteid}}">Functions -> Copy Websites</h1>
+<div class="row">
+  <h5>Choose Which Blog to Copy for:</h5>
+<ul class="collection with-header">
+{{#each blogs}}
+<li class="collection-item"><a id="{{id}}" googleid="{{blogID}}" style="color:inherit;" href='#/'>{{title}}</a></li>
+{{else}}
+<p>No Blogs Found for this User</p>
+{{/each}}
+</ul>
+</div>
+
+<script>
+    $(document).ready(() => {
+        $('a').click(function () {
+        $(".progress").toggle(500,'linear');
+        let blogclicked = $(this).attr('id');
+        let blogID = $(this).attr('googleid');
+        let currentBlog = $('h1').attr('blog');
+        let currentSite = $('h1').attr('site');
+        $.post(`/functions/${currentBlog}/${currentSite}/copy`,
+        {
+        blogclicked: blogclicked
+        },
+        function(data, status){
+        $(".progress").toggle(500,'linear');
+        window.location.replace(`/blogs/posts/${blogID}`);
+        });
+    });
+    });
+</script>

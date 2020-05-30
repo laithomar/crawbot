@@ -1,0 +1,32 @@
+<h1>Add Posts using {{template.tempbody.templateName}}</h1>
+<div class="row">
+  <form action="/blogs/posts/{{blogid}}/{{template._id}}/addpost" method="post" class="col s12">
+    <input type="hidden" name="_method" value="POST">
+      
+    <div class="row">
+      <div class="input-field">
+        <input type="text" name="{{template.tempbody.title}}" value="" placeholder="Insert The Title of The Post">
+        <label for="title">{{template.tempbody.title}}: </label>
+      </div>
+      <div class="input-field">
+        <input type="text" name="{{template.tempbody.category}}" value="" placeholder="Insert The Categories of The Post">
+        <label for="title">{{template.tempbody.category}}: </label>
+      </div>      
+      {{#each tempBodyArray}}
+      <div class="input-field">
+        <input type="text" name="{{this}}" value="" placeholder="Insert value for {{this}}">
+        <label for="title">{{this}}: </label>
+      </div>
+      {{/each}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field">
+        <h5>Content of Post: <a href="#/" id="toggleBtn" class="waves-effect waves-light btn">Show/Hide</a></h5>
+        <textarea class="post-content hidden" name="content">{{template.tempbody.content}}</textarea>
+      </div>
+    </div>
+
+    <input type="submit" value="Publish Post" class="btn">
+  </form>
+</div>

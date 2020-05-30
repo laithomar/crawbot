@@ -1,0 +1,19 @@
+<h1>Edit Website Information</h1>
+<div class="row">
+  <form action="/crawl/{{blogid}}/manageweb/{{siteid}}/edit?_method=PUT" method="post" class="col s12">
+    <input type="hidden" name="_method" value="PUT">
+    <div class="row">
+      <div class="input-field">
+        <input type="text" name="title" value="{{site.title}}">
+        <label for="title">Sitename: </label>
+      </div>
+      <div class="input-field">
+        <input type="text" name="link" value="{{site.link}}">
+        <label for="title">Site URL: </label>
+      </div>
+      </div>
+    </div>
+
+    <input type="submit" value="Update" class="btn">
+  </form>
+</div>

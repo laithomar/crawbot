@@ -1,0 +1,26 @@
+<h1>Crawling Manager</h1>
+<a href="/crawl/{{blogid}}/addweb" class="waves-effect waves-light btn">Add New Website</a>
+<div class="row">
+  <h5>Existing Websites List:</h5>
+<ul class="collection with-header">
+{{#each sites}}
+<li class="collection-item">
+        <div>
+          {{title}}
+          <a href="/crawl/{{blog.blogID}}/manageweb/{{id}}" class="secondary-content">
+          <i class="material-icons">send</i></a>
+          <a href="/crawl/{{blog.blogID}}/manageweb/{{id}}/edit" class="secondary-content">
+          <i class="material-icons">edit</i></a>
+          <a href="/functions/{{blog.blogID}}/{{id}}/copy" class="secondary-content">
+          <i class="material-icons">content_copy</i></a>
+          <form action="/crawl/{{blog.blogID}}/manageweb/{{id}}?_method=DELETE" method="post" id="delete-form">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" onclick="return confirm('Confirm Permanent Deletion of this Site and its Settings?')" class="secondary-content"><i class="material-icons">delete</i></button>
+          </form>          
+          </div>
+          </li>
+{{else}}
+<p>No Settings found for this Website</p>
+{{/each}}
+</ul>
+</div>

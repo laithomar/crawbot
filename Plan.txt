@@ -1,0 +1,23 @@
+
+
+Crawl Website :
+
+1- Site Name
+2- Site URL - Main URL
+3- Categories : 
+        1- Array of Categories
+        2- Array of URL Categories
+
+--------------------------------------
+
+Start Crawl Inputs :
+
+    1- Website
+    2- Category
+    3-  Number of Pages to Crawl
+    4-  Number of Posts to Scrape
+    done - 5- Need to Chheck when i delete a website from database the settings for this website deleted or no
+
+if(pagesCrawling == 2) {
+        
+}

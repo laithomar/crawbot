@@ -1,0 +1,69 @@
+<h1>Edit Template : {{template.tempbody.templateName}}</h1>
+<div class="input-add-process">
+<h2></h2>
+<div id="newfield" class="input-field">
+    <p>
+      <input type="text" name="newfield" placeholder="Type new field Value" value="" />
+      <a href="#" id="addScnt" class="waves-effect waves-light btn">Add Field</a>
+    </p>
+</div>
+<div class="row">
+  <form action="/blogs/posts/{{blogid}}/{{template._id}}/edittemplate?_method=PUT" method="post" class="col s12">
+    <input type="hidden" name="_method" value="PUT">
+      
+    <div class="row">
+      <div class="input-field">
+        <input type="text" readonly="readonly" name="{{template.tempbody.title}}" value="title">
+        <label for="title">{{template.tempbody.title}}: (This Field not Changable)</label>
+      </div>
+      <div class="input-field">
+        <input type="text" readonly="readonly" name="{{template.tempbody.category}}" value="category">
+        <label for="title">{{template.tempbody.category}}: (This Field not Changable)</label>
+      </div>      
+      <div class="input-field">
+        <input type="text" name="templateName" value="{{template.tempbody.templateName}}">
+        <label for="title">Template Name: </label>
+      </div>    
+      <div id="inputfield">
+      {{#each tempBodyArray}}
+      <div class="input-field">
+        <label for="title">{{this.[0]}}: </label>
+        <input type="text" name="{{this.[0]}}" value="{{this.[0]}}" placeholder="" />
+        <a href="#" id="remScnt" class="waves-effect red accent-4 btn">Remove</a>
+        </div>
+      {{/each}}
+      </div>
+      </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field">
+        <h5>Content of Post: </h5>
+        <textarea class="post-content" name="content">{{template.tempbody.content}}</textarea>
+      </div>
+    </div>
+
+    <input type="submit" value="Save" class="btn">
+  </form>
+</div>
+
+<script>
+  $(function () {
+    var scntDiv = $('#inputfield');
+    var nameValue;
+    $('#newfield input').keyup(function() { 
+     nameValue = $(this).val() // get the current value of the input field.
+    }).keyup();
+
+    $('#addScnt').click(function () {
+      $('<div class="input-field"><input type="text" name="' + nameValue + '" value="'+nameValue+'" placeholder="'+nameValue+'" /><a href="#" id="remScnt" class="waves-effect red accent-4 btn">Remove</a></div>').appendTo(scntDiv);
+      return false;
+    });
+   
+    $('#inputfield').on('click','#remScnt',function (e) {
+        //alert("yess! You're clicked");
+        $(this).parent('div').remove();
+      return false;
+    });
+  });
+</script>

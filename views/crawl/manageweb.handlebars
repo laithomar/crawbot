@@ -1,0 +1,80 @@
+<h4>Manage {{sitename}} From {{blogname}}</h4>
+<h5>List of Existing Settings:</h5>
+<div class="row">
+    <ul class="collection with-header">
+  {{#each settings}}
+      <li class="collection-item">
+        <div>
+          {{settingbody.title}}
+          <a href="/crawl/{{../blogid}}/manageweb/{{../siteid}}/setting/{{id}}/start" class="secondary-content">
+          <i class="material-icons">input</i></a>                    
+          <a href="/crawl/{{../blogid}}/manageweb/{{../siteid}}/setting/{{id}}/edit" class="secondary-content">
+          <i class="material-icons">edit</i></a>          
+          <form action="/crawl/{{../blogid}}/manageweb/{{../siteid}}/setting/{{id}}?_method=DELETE" method="post" id="delete-form">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" onclick="return confirm('Confirm of Permanent Deletion of this Setting?')" class="secondary-content"><i class="material-icons">delete</i></button>
+          </form>          
+          </div>
+          </li>
+  {{else}}
+    <p>No Settings found for this Website</p>
+  {{/each}}
+  </ul>
+<h5>Add Setting Form</h5>
+<div id="newfield" class="input-field">
+    <p>
+      <input type="text" name="newfield" placeholder="Type new field Value" value="" />
+      <a href="#" id="addScnt" class="waves-effect waves-light btn">Add Field</a>
+    </p>
+</div>
+
+  <form action="/crawl/{{blogid}}/manageweb/{{siteid}}" method="post" class="col s12">
+    <div id="inputfield" class="row">
+      <div class="input-field">
+        <input type="text" name="title" value="{{title}}">
+        <label for="title">Setting Title: </label>
+      </div>
+      <div class="input-field">
+        <input type="text" name="categoryLink" value="{{categoryLink}}">
+        <label for="title">Scrape Category Link: </label>
+      </div>
+      <div class="input-field">
+        <input type="text" name="blogCategory" value="{{blogCategory}}">
+        <label for="title">Blog Posts Category: </label>
+      </div>      
+      <div class="input-field">
+        <input type="text" name="maximumPosts" value="{{maximumPosts}}">
+        <label for="title">Maximum Number of Posts To Scrape: </label>
+      </div>     
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field">
+        <h5>Setting Code: </h5>
+        <textarea class="post-content" name="settingCode"></textarea>
+      </div>
+    </div>
+    <input type="submit" value="Save" class="btn">
+  </form>
+</div>
+
+<script>
+  $(function () {
+    var scntDiv = $('#inputfield');
+    var nameValue;
+    $('#newfield input').keyup(function() { 
+     nameValue = $(this).val() // get the current value of the input field.
+    }).keyup();
+
+    $('#addScnt').click(function () {
+      $('<div class="input-field"><input type="text" name="' + nameValue + '" value=""><label for="title">' + nameValue + '</label><a href="#" id="remScnt" class="waves-effect red accent-4 btn">Remove</a></div>').appendTo(scntDiv);
+      return false;
+    });
+   
+    $('#inputfield').on('click','#remScnt',function (e) {
+        //alert("yess! You're clicked");
+        $(this).parent('div').remove();
+      return false;
+    });
+  });
+</script>

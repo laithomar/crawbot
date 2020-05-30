@@ -1,0 +1,77 @@
+  {{#if username}}
+    {{> _add-btn}}
+  {{/if}}
+  
+<h1 id="{{blogid}}" class="blogRef">Posts List</h1>
+<a href="/crawl/{{blogid}}" class="waves-effect waves-light btn">Manage Crawling</a>
+<a href="/blogs/posts/{{blogid}}/viewtemplates" class="waves-effect waves-light btn">Manage Templates</a>
+<a href="/blogs/posts/{{blogid}}/googlelinks" class="waves-effect waves-light btn">Google Links Problems</a>
+<a href="#/" class="waves-effect waves-light btn" id='buttonChangeDate'>Raise to Top</a>
+<div class="row">
+<ul class="collection with-header">
+  {{#each posts}}
+      <li class="collection-item">
+        <div>
+          <input type="checkbox" class="checkbox" id="{{id}}"><label for="{{id}}"></label>
+          <span>{{title}}</span>
+            <form action="/blogs/posts/{{blog.id}}/post/{{id}}?_method=DELETE" method="post" id="delete-form">
+              <input type="hidden" name="_method" value="DELETE">
+              <button type="submit" onclick="return confirm('Confirm Deletion of the Post?')" class="secondary-content"><i class="material-icons">delete</i></button>
+            </form>
+
+          <a href="/blogs/posts/{{blog.id}}/post/{{id}}/edit" class="secondary-content">
+          <i class="material-icons">edit</i></a>
+          <a target='_blank' href="{{url}}" class="secondary-content">
+          <i class="material-icons">pageview</i></a>
+
+          </div>
+          </li>
+  {{else}}
+    <p>No Blogs found</p>
+  {{/each}}
+  </ul>
+  <ul class="pagination">
+     <li class="active"><a href="/blogs/posts/{{blogid}}">Main</a></li>
+  {{#each pagesArray}}
+    {{#if @first}}
+    {{else}}
+    <li class="active"><a href="/blogs/posts/{{../blogid}}/page/{{this}}">{{@index}}</a></li>
+          {{/if}}
+    {{!--  {{#if @last}}
+      <a href="/blogs/blog/{{../blogid}}/page/{{this}}">Next Page</a>
+      {{/if}} --}}
+  {{/each}}
+  </ul>
+</div>
+
+<script>
+  let changingDate = {//Object To Collect Posts That Checked Raise To Top and Send To Server
+    content: []
+  };
+  let blogid = $('.blogRef').attr('id');//Store The Blog ID
+  $(document).ready(function () {//After Page Loaded
+    $(".checkbox").click(function () {//IF Clicked On Check Box
+      if($(this).prop('checked')) {//If its Checked
+        changingDate.content.push($(this).prop('id'));//Push the Value into the Array inside Object
+      } else {//If its Unchecked
+        changingDate.content = changingDate.content.filter(post => post !== $(this).prop('id'));//Remove the Value from Array
+      }
+    });
+
+    $("#buttonChangeDate").click(function () {//If Raise to Top Button Clicked
+      if(changingDate.content == '') {//Check if the Array is not Empty
+        console.log('Empty Array');
+      } else {//If Not Empty
+        $(".progress").toggle(500,'linear');//Show Progress Loading Bar for User
+        $.post( `/functions/${blogid}/changedate`, changingDate,//--POST-- Req Using JQuery to the Server
+        function(data, status){//If the --POST-- Req Finished and Response Received From Server
+        $(".progress").toggle(500,'linear');//Hide The Progress Loading Bar
+          location.reload();//Refresh the Same Page
+          console.log(data);//Console Log The Response from Server
+          $('.checkbox').prop('checked', false);//Uncheck All The Boxes
+          changingDate.content = [];//Clear the Array for Next Requests
+        });
+      }
+    });
+});
+</script>

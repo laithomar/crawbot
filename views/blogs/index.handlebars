@@ -1,0 +1,19 @@
+<h1>Blogs List</h1>
+<div class="row">
+  <ul class="collection with-header">
+    {{#each blogs}}
+    <li class="collection-item">
+      <div>
+        {{name}}
+        <a href="/blogs/posts/{{id}}" class="secondary-content">
+          <span class="badge">{{posts.totalItems}}</span>
+          <i class="material-icons">send</i></a>
+        <a target='_blank' href="{{url}}" class="secondary-content">
+          <i class="material-icons">pageview</i></a>
+      </div>
+    </li>
+    {{else}}
+    <p>No Blogs found</p>
+    {{/each}}
+  </ul>
+</div>

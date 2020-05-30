@@ -1,0 +1,56 @@
+<nav class="grey darken-3">
+  <div class="container">
+    <div class="nav-wrapper">
+      <a href="/" class="brand-logo center">Crawbot</a>
+      <a href="#" data-activates="main-menu" class="button-collapse show-on-large"><i class="fa fa-bars"></i></a>
+      <!-- RIGHT NAV -->
+      <ul class="right hide-on-small-only">
+        {{#if username}}
+        <li><a href="#">Welcome {{username}}</a></li>
+        <li><a href="#/" id="token"><i class="material-icons">flag</i></a></li>
+        <li><a href="/blogs"><i class="material-icons">apps</i></a></li>
+        {{#if blogid}}
+        <li><a href="/blogs/posts/{{blogid}}"><i class="fa fa-book"></i> Blog Page</a></li>
+        {{/if}}
+        {{#if siteid}}
+        <li><a href="/crawl/{{blogid}}/manageweb/{{siteid}}"><i class="fa fa-globe"></i> Site</a></li>
+        {{/if}}
+
+        <li><a href="/auth/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+        {{else}}
+        {{/if}}
+      </ul>
+      <!-- SIDE MENU -->
+      <ul class="side-nav" id="main-menu">
+        {{#if username}} 
+        {{else}}
+        <li>
+          <a class="btn red darken-1" href="/auth/google"><i class="fa fa-google left"></i> Login With Google</a>
+        </li>
+        {{/if}}
+        {{#if username}}
+        <li><a href="/blogs"><i class="fa fa-th"></i> Blogs List</a></li>
+        <li class="divider"></li>
+        {{#if blogid}}
+        <li><a href="/blogs/posts/{{blogid}}"><i class="fa fa-book"></i> Blog Page</a></li>
+        {{/if}}
+        {{#if siteid}}
+        <li><a href="/crawl/{{blogid}}/manageweb/{{siteid}}"><i class="fa fa-globe"></i> Site</a></li>
+        {{/if}}
+        <li><a href="/stories/my"><i class="fa fa-user"></i> Pages List</a></li>
+        <li><a href="/stories/my"><i class="fa fa-user"></i> Comments List</a></li>
+        <li><a href="/auth/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+        {{/if}}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script>
+    $(document).ready(function () {
+    $("#token").click(function () {
+      event.preventDefault();
+      $.get( `/functions/userToken`);
+    });
+});
+</script>
