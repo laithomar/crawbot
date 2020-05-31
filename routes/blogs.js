@@ -1,20 +1,22 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const mongoose = require("mongoose");
-const request = require("request");
-const User = mongoose.model("users");
-const Blog = mongoose.model("blogs");
-const Template = mongoose.model("template");
-const { ensureAuthenticated, ensureGuest } = require("../helpers/auth");
-let paginationArray = [""]; //Array to store NextPageToken to provide pagination method
-let tempBlogid = ""; //Variable to Clear the Pagination after moving from blog to another blog
+const mongoose = require('mongoose');
+const request = require('request');
+const User = mongoose.model('users');
+const Blog = mongoose.model('blogs');
+const Template = mongoose.model('template');
+const { ensureAuthenticated, ensureGuest } = require('../helpers/auth');
+const axios = require('axios');
+
+let paginationArray = ['']; //Array to store NextPageToken to provide pagination method
+let tempBlogid = ''; //Variable to Clear the Pagination after moving from blog to another blog
 
 // Blogs List Index Page
-router.get("/", ensureAuthenticated, (req, res) => {
+router.get('/', ensureAuthenticated, (req, res) => {
   request(
     {
       //Fetch DATA From Google API as Per the Generated Token to Show User Details
-      url: "https://www.googleapis.com/blogger/v3/users/self/blogs",
+      url: 'https://www.googleapis.com/blogger/v3/users/self/blogs',
       headers: {
         Authorization: `Bearer ${req.session.token}`, //Provide inside request header Authentication Token
       },
@@ -51,7 +53,7 @@ router.get("/", ensureAuthenticated, (req, res) => {
         } catch (error) {
           console.log(error);
         }
-        res.render("blogs/index", {
+        res.render('blogs/index', {
           blogs: responseOBJ.items,
         });
       }
@@ -60,7 +62,7 @@ router.get("/", ensureAuthenticated, (req, res) => {
 });
 
 // Blog Posts List Page
-router.get("/posts/:id", ensureAuthenticated, (req, res) => {
+router.get('/posts/:id', ensureAuthenticated, (req, res) => {
   request(
     {
       //Fetch DATA From Google API as Per the Generated Token to Show User Details
@@ -79,7 +81,7 @@ router.get("/posts/:id", ensureAuthenticated, (req, res) => {
 
         //To Check if still in the Same Blog Page or changed to Another Blog
         if (req.params.id !== tempBlogid) {
-          paginationArray = [""];
+          paginationArray = [''];
           tempBlogid = req.params.id;
         }
         //Pagination Process -> Check Array if Have Tokens same as the new one then Push new inside array
@@ -89,7 +91,7 @@ router.get("/posts/:id", ensureAuthenticated, (req, res) => {
         if (!found) {
           paginationArray.push(responseOBJ.nextPageToken);
         }
-        res.render("blogs/posts", {
+        res.render('blogs/posts', {
           posts: responseOBJ.items,
           blogid: req.params.id,
           pagesArray: paginationArray,
@@ -119,7 +121,7 @@ router.get(`/posts/:id/page/:tokenPage`, ensureAuthenticated, (req, res) => {
 
         //To Check if still in the Same Blog Page or changed to Another Blog
         if (req.params.id !== tempBlogid) {
-          paginationArray = [""];
+          paginationArray = [''];
           tempBlogid = req.params.id;
         }
 
@@ -131,7 +133,7 @@ router.get(`/posts/:id/page/:tokenPage`, ensureAuthenticated, (req, res) => {
           paginationArray.push(responseOBJ.nextPageToken);
         }
 
-        res.render("blogs/posts", {
+        res.render('blogs/posts', {
           posts: responseOBJ.items,
           blogid: req.params.id,
           pagesArray: paginationArray,
@@ -143,7 +145,7 @@ router.get(`/posts/:id/page/:tokenPage`, ensureAuthenticated, (req, res) => {
 
 // GET Edit Page
 router.get(
-  "/posts/:blogid/post/:postid/edit",
+  '/posts/:blogid/post/:postid/edit',
   ensureAuthenticated,
   (req, res) => {
     request(
@@ -162,7 +164,7 @@ router.get(
         } else {
           responseOBJ = JSON.parse(body); //Parse the Response data came from API to Convert to OBJ
           //res.send(responseOBJ);
-          res.render("blogs/edit", {
+          res.render('blogs/edit', {
             post: responseOBJ,
             blogid: req.params.blogid,
           });
@@ -174,7 +176,7 @@ router.get(
 
 // POST Edit Page
 router.put(
-  "/posts/:blogid/post/:postid/edit",
+  '/posts/:blogid/post/:postid/edit',
   ensureAuthenticated,
   (req, res) => {
     let editedPost = {
@@ -184,9 +186,9 @@ router.put(
     let JSONeditedPost = JSON.stringify(editedPost); //To send Data to API we Should Convert OBJ to String -> Stringify
     request(
       {
-        method: "patch",
+        method: 'patch',
         headers: {
-          "content-type": "application/json",
+          'content-type': 'application/json',
           Authorization: `Bearer ${req.session.token}`, //Provide inside request header Authentication Token
         },
         url: `https://www.googleapis.com/blogger/v3/blogs/${req.params.blogid}/posts/${req.params.postid}`,
@@ -202,14 +204,14 @@ router.put(
 
 // Delete GET Request Page
 router.delete(
-  "/posts/:blogid/post/:postid",
+  '/posts/:blogid/post/:postid',
   ensureAuthenticated,
   (req, res) => {
     request(
       {
-        method: "delete",
+        method: 'delete',
         headers: {
-          "content-type": "application/json",
+          'content-type': 'application/json',
           Authorization: `Bearer ${req.session.token}`, //Provide inside request header Authentication Token
         },
         url: `https://www.googleapis.com/blogger/v3/blogs/${req.params.blogid}/posts/${req.params.postid}`,
@@ -223,16 +225,16 @@ router.delete(
 );
 
 // GET Add Page
-router.get("/posts/:blogid/add", ensureAuthenticated, (req, res) => {
-  res.render("blogs/add", {
+router.get('/posts/:blogid/add', ensureAuthenticated, (req, res) => {
+  res.render('blogs/add', {
     blogid: req.params.blogid,
   });
 });
 
 // POST Add Page
-router.post("/posts/:blogid/add", ensureAuthenticated, (req, res) => {
+router.post('/posts/:blogid/add', ensureAuthenticated, (req, res) => {
   let newPost = {
-    kind: "blogger#post",
+    kind: 'blogger#post',
     blog: {
       id: req.params.blogid,
     },
@@ -242,9 +244,9 @@ router.post("/posts/:blogid/add", ensureAuthenticated, (req, res) => {
   let JSONeditedPost = JSON.stringify(newPost); //To send Data to API we Should Convert OBJ to String -> Stringify
   request(
     {
-      method: "post",
+      method: 'post',
       headers: {
-        "content-type": "application/json",
+        'content-type': 'application/json',
         Authorization: `Bearer ${req.session.token}`, //Provide inside request header Authentication Token
       },
       url: `https://www.googleapis.com/blogger/v3/blogs/${req.params.blogid}/posts/`,
@@ -258,14 +260,14 @@ router.post("/posts/:blogid/add", ensureAuthenticated, (req, res) => {
 });
 //****************** Post Template Requests  ****************************/
 // GET Request -- Add Template Page --
-router.get("/posts/:blogid/addtemplate", ensureAuthenticated, (req, res) => {
-  res.render("blogs/addtemplate", {
+router.get('/posts/:blogid/addtemplate', ensureAuthenticated, (req, res) => {
+  res.render('blogs/addtemplate', {
     blogid: req.params.blogid,
   });
 });
 
 // POST Add Template Page
-router.post("/posts/:blogid/addtemplate", (req, res) => {
+router.post('/posts/:blogid/addtemplate', (req, res) => {
   Blog.findOne({ blogID: req.params.blogid }).then((blog) => {
     //To Fetch ObjectID for Blog from DB
     //console.log(req.body);
@@ -283,14 +285,14 @@ router.post("/posts/:blogid/addtemplate", (req, res) => {
 });
 
 //Get EDIT Template Page
-router.get("/posts/:blogid/:templateid/edittemplate", (req, res) => {
+router.get('/posts/:blogid/:templateid/edittemplate', (req, res) => {
   Template.findOne({ _id: req.params.templateid })
-    .populate("blog")
+    .populate('blog')
     .then((template) => {
       //To Fetch ObjectID for Blog from DB
       if (template && template.blog.blogID == req.params.blogid) {
         let tempBodyArray = Object.entries(template.tempbody);
-        let valueToDelete = ["title", "category", "content", "templateName"];
+        let valueToDelete = ['title', 'category', 'content', 'templateName'];
         for (let i = 0; i < valueToDelete.length; i++) {
           for (let k = 0; k < tempBodyArray.length; k++) {
             if (tempBodyArray[k][0] == valueToDelete[i]) {
@@ -298,7 +300,7 @@ router.get("/posts/:blogid/:templateid/edittemplate", (req, res) => {
             }
           }
         }
-        res.render("blogs/editPostTemplate", {
+        res.render('blogs/editPostTemplate', {
           template,
           tempBodyArray,
           blogid: req.params.blogid,
@@ -311,17 +313,17 @@ router.get("/posts/:blogid/:templateid/edittemplate", (req, res) => {
 });
 
 //PUT EDIT Template Page
-router.put("/posts/:blogid/:templateid/edittemplate", (req, res) => {
+router.put('/posts/:blogid/:templateid/edittemplate', (req, res) => {
   Template.findOne({ _id: req.params.templateid }).then((template) => {
     let reqObject = req.body;
     delete reqObject._method; //To Delete POST METHOD from Object Received
     let reqBodyArray = Object.entries(reqObject);
     let editedTemplate = {};
     for (let i = 0; i < reqBodyArray.length; i++) {
-      if (reqBodyArray[i][0] === "content") {
-        editedTemplate["content"] = reqBodyArray[i][1];
-      } else if (reqBodyArray[i][0] === "templateName") {
-        editedTemplate["templateName"] = reqBodyArray[i][1];
+      if (reqBodyArray[i][0] === 'content') {
+        editedTemplate['content'] = reqBodyArray[i][1];
+      } else if (reqBodyArray[i][0] === 'templateName') {
+        editedTemplate['templateName'] = reqBodyArray[i][1];
       } else {
         editedTemplate[reqBodyArray[i][1]] = reqBodyArray[i][1];
       }
@@ -334,14 +336,14 @@ router.put("/posts/:blogid/:templateid/edittemplate", (req, res) => {
 });
 
 // GET List Blog Templates Page
-router.get("/posts/:blogid/viewtemplates", (req, res) => {
+router.get('/posts/:blogid/viewtemplates', (req, res) => {
   Blog.findOne({ blogID: req.params.blogid }).then((blog) => {
     //To Fetch ObjectID for Blog from DB
     Template.find({ blog: blog._id })
-      .populate("blog")
+      .populate('blog')
       .then((templates) => {
         //Fetch Site from DB
-        res.render("blogs/viewtemplates", {
+        res.render('blogs/viewtemplates', {
           templates: templates,
           blogid: req.params.blogid,
         });
@@ -350,7 +352,7 @@ router.get("/posts/:blogid/viewtemplates", (req, res) => {
 });
 
 // Delete Template Request
-router.delete("/posts/:blogid/:templateid", (req, res) => {
+router.delete('/posts/:blogid/:templateid', (req, res) => {
   Template.remove({ _id: req.params.templateid }).then(() => {
     res.redirect(`/blogs/posts/${req.params.blogid}/viewtemplates`);
   });
@@ -358,19 +360,19 @@ router.delete("/posts/:blogid/:templateid", (req, res) => {
 
 //****************** Add Post Using Template Requests  ****************************/
 // GET Add Post From Template Page
-router.get("/posts/:blogid/:templateid/addpost", (req, res) => {
+router.get('/posts/:blogid/:templateid/addpost', (req, res) => {
   Template.findOne({ _id: req.params.templateid })
-    .populate("blog")
+    .populate('blog')
     .then((template) => {
       //To Fetch ObjectID for Blog from DB
       if (template && template.blog.blogID == req.params.blogid) {
         let tempBodyArray = Object.keys(template.tempbody);
-        let valueToDelete = ["title", "category", "content", "templateName"];
+        let valueToDelete = ['title', 'category', 'content', 'templateName'];
         for (let i = 0; i < 4; i++) {
           let index = tempBodyArray.indexOf(valueToDelete[i]);
           tempBodyArray.splice(index, 1);
         }
-        res.render("blogs/addPostTemplate", {
+        res.render('blogs/addPostTemplate', {
           template,
           tempBodyArray,
           blogid: req.params.blogid,
@@ -382,7 +384,7 @@ router.get("/posts/:blogid/:templateid/addpost", (req, res) => {
     });
 });
 
-router.post("/posts/:blogid/:templateid/addpost", (req, res) => {
+router.post('/posts/:blogid/:templateid/addpost', (req, res) => {
   Blog.findOne({ blogID: req.params.blogid }).then((blog) => {
     //To Fetch ObjectID for Blog from DB
     let reqObject = req.body;
@@ -392,13 +394,13 @@ router.post("/posts/:blogid/:templateid/addpost", (req, res) => {
     let reqBodyArray = Object.entries(reqObject);
     reqBodyArray.forEach((property) => {
       postContent = postContent.replace(
-        new RegExp(property[0], "g"),
+        new RegExp(property[0], 'g'),
         property[1]
       );
     });
     //Start REQUEST GOOGLE BLOGGER API TO ADD POST
     let newPost = {
-      kind: "blogger#post",
+      kind: 'blogger#post',
       blog: {
         id: req.params.blogid,
       },
@@ -408,9 +410,9 @@ router.post("/posts/:blogid/:templateid/addpost", (req, res) => {
     let JSONeditedPost = JSON.stringify(newPost); //To send Data to API we Should Convert OBJ to String -> Stringify
     request(
       {
-        method: "post",
+        method: 'post',
         headers: {
-          "content-type": "application/json",
+          'content-type': 'application/json',
           Authorization: `Bearer ${req.session.token}`, //Provide inside request header Authentication Token
         },
         url: `https://www.googleapis.com/blogger/v3/blogs/${req.params.blogid}/posts/`,
@@ -427,14 +429,14 @@ router.post("/posts/:blogid/:templateid/addpost", (req, res) => {
 
 /*************************** Google Links Problems Section **********************/
 // GET-REQ To Submit Links Form Page
-router.get("/posts/:blogid/googlelinks", (req, res) => {
+router.get('/posts/:blogid/googlelinks', (req, res) => {
   Blog.findOne({ blogID: req.params.blogid }).then((blog) => {
     //To Fetch ObjectID for Blog from DB
     Template.find({ blog: blog._id })
-      .populate("blog")
+      .populate('blog')
       .then((templates) => {
         //Fetch Site from DB
-        res.render("blogs/googlelinks", {
+        res.render('blogs/googlelinks', {
           templates: templates,
           blogid: req.params.blogid,
         });
@@ -442,16 +444,16 @@ router.get("/posts/:blogid/googlelinks", (req, res) => {
   });
 });
 
-router.post("/posts/:blogid/googlelinks", (req, res) => {
+router.post('/posts/:blogid/googlelinks', (req, res) => {
   Blog.findOne({ blogID: req.params.blogid }).then((blog) => {
     //To Fetch ObjectID for Blog from DB
     let counter = 0;
     let reqObject = req.body;
     let links = reqObject.content;
-    links = links.replace(new RegExp("https://www.kamshe.com", "g"), "");
-    links = links.replace(new RegExp(".html", "g"), ".html,");
-    links = links.replace(new RegExp("\r\n", "g"), "");
-    let linksArray = links.split(",");
+    links = links.replace(new RegExp('https://www.kamshe.com', 'g'), '');
+    links = links.replace(new RegExp('.html', 'g'), '.html,');
+    links = links.replace(new RegExp('\r\n', 'g'), '');
+    let linksArray = links.split(',');
     linksArray.pop();
     EditPosts();
     //Start REQUEST GOOGLE BLOGGER API TO ADD POST
@@ -459,9 +461,9 @@ router.post("/posts/:blogid/googlelinks", (req, res) => {
       if (counter < linksArray.length) {
         request(
           {
-            method: "get",
+            method: 'get',
             headers: {
-              "content-type": "application/json",
+              'content-type': 'application/json',
               Authorization: `Bearer ${req.session.token}`, //Provide inside request header Authentication Token
             },
             url: `https://www.googleapis.com/blogger/v3/blogs/${req.params.blogid}/posts/bypath?path=${linksArray[counter]}`,
@@ -470,17 +472,17 @@ router.post("/posts/:blogid/googlelinks", (req, res) => {
           (response, body) => {
             responseOBJ = JSON.parse(body.body); //Parse the Response data came from API to Convert to OBJ
             let postContent = responseOBJ.content;
-            postContent = postContent.replace(/<iframe .*?><\/iframe>/g, "");
-            postContent = postContent.replace(/<embed .*?>/g, "");
+            postContent = postContent.replace(/<iframe .*?><\/iframe>/g, '');
+            postContent = postContent.replace(/<embed .*?>/g, '');
             let editedPost = {
               content: postContent,
             };
             let JSONeditedPost = JSON.stringify(editedPost); //To send Data to API we Should Convert OBJ to String -> Stringify
             request(
               {
-                method: "patch",
+                method: 'patch',
                 headers: {
-                  "content-type": "application/json",
+                  'content-type': 'application/json',
                   Authorization: `Bearer ${req.session.token}`, //Provide inside request header Authentication Token
                 },
                 url: `https://www.googleapis.com/blogger/v3/blogs/${req.params.blogid}/posts/${responseOBJ.id}`,
@@ -488,7 +490,7 @@ router.post("/posts/:blogid/googlelinks", (req, res) => {
                 body: JSONeditedPost,
               },
               (response) => {
-                console.log("Edited:", responseOBJ.title);
+                console.log('Edited:', responseOBJ.title);
                 counter++;
                 setTimeout(EditPosts, 1000);
               }
@@ -496,7 +498,7 @@ router.post("/posts/:blogid/googlelinks", (req, res) => {
           }
         );
       } else {
-        console.log("Finished Editing");
+        console.log('Finished Editing');
         res.redirect(`/blogs/posts/${req.params.blogid}`);
       }
     }
